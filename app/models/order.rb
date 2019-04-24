@@ -6,6 +6,7 @@ class Order < ActiveRecord::Base
     monetize(item_prices.reduce(:+))
   end
 
+  private
   def monetize(money_big_num)
     '%.2f' % money_big_num
   end
