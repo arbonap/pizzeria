@@ -13,7 +13,21 @@ RSpec.describe Order, type: :model do
     @item_two = Item.create(:quantity => 3, :pizza_type => @vegetarian)
     @order = Order.create(:items => [@item_one, @item_two])
     @total_order_price = @order.total_order_price
-    
+
     expect(@total_order_price).to eq("42.00")
+  end
+
+  it "should serialize attributes" do
+    @margherita = PizzaType.create(:name => 'Margherita', :price => 9.00)
+    @supreme = PizzaType.create(:name => 'Supreme', :price => 8.00)
+    @item_one = Item.create(:quantity => 2, :pizza_type => @margherita)
+    @item_two = Item.create(:quantity => 3, :pizza_type => @supreme)
+    @order = Order.create(:items => [@item_one, @item_two])
+    @order_serializer = OrderSerializer.new(@order)
+    @hash = @order_serializer.serializable_hash
+
+    expect(@hash[:id]).to be_present
+    expect(@hash[:total_order_price]).to eq("42.00")
+
   end
 end
