@@ -30,4 +30,5 @@ group :development, :test do
   gem 'byebug'
   gem 'spring'
   gem "rspec-rails"
+  gem 'factory_bot_rails'
 end
