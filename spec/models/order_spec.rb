@@ -17,7 +17,8 @@ RSpec.describe Order, type: :model do
     expect(@total_order_price).to eq("42.00")
   end
 
-  it "should serialize attributes" do
+  it "should serialize order attributes" do
+
     @margherita = PizzaType.create(:name => 'Margherita', :price => 9.00)
     @supreme = PizzaType.create(:name => 'Supreme', :price => 8.00)
     @item_one = Item.create(:quantity => 2, :pizza_type => @margherita)
@@ -28,6 +29,12 @@ RSpec.describe Order, type: :model do
 
     expect(@hash[:id]).to be_present
     expect(@hash[:total_order_price]).to eq("42.00")
-
+    expect(@hash[:items].size).to eq(2)
+    expect(@hash[:items][0][:quantity]).to eq(2)
+    expect(@hash[:items][1][:quantity]).to eq(3)
+    expect(@hash[:items][0][:pizza_type][:name]).to eq("Margherita")
+    expect(@hash[:items][1][:pizza_type][:name]).to eq("Supreme")
+    expect(@hash[:items][0][:item_price]).to eq("18.00")
+    expect(@hash[:items][1][:item_price]).to eq("24.00")
   end
 end
