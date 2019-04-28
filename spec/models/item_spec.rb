@@ -13,8 +13,6 @@ RSpec.describe Item, type: :model do
   it { should have_db_column(:created_at) }
   it { should have_db_column(:updated_at) }
 
-  # serialize :total_item_price, :item_price
-
   it "should calculate the item_price" do
     @pepperoni = PizzaType.create(:name => 'Pepperoni', :price => 9.00)
     @vegetarian = PizzaType.create(:name => 'Vegetarian', :price => 8.00)
