@@ -54,10 +54,13 @@ class OrdersController < ApplicationController
   end
 
   # DELETE /orders/1
-  # DELETE /orders/1.json
   def destroy
-    @order.destroy
-      format.json { head :no_content }
+    begin
+      @order.destroy
+      head :no_content
+    rescue NoMethodError
+      render json: { errors: @order.errors }, status: 422
+    end
   end
 
   private
