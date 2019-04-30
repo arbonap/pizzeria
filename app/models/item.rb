@@ -1,5 +1,5 @@
 class Item < ActiveRecord::Base
-  has_one :pizza_type
+  has_one :pizza_type, dependent: :destroy
   belongs_to :order
 
   validates :quantity, :pizza_type, presence: true

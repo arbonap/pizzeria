@@ -1,5 +1,5 @@
 class Order < ActiveRecord::Base
-  has_many :items
+  has_many :items, dependent: :destroy
   serialize :total_order_price
 
   def total_order_price
