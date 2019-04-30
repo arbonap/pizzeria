@@ -37,7 +37,7 @@ class OrdersController < ApplicationController
 
   # PATCH/PUT /orders/1
   def update
-    byebug
+    # byebug
     Item.where(order_id: @order.id).destroy_all
 
     params[:params][:order][:items].map do |item|
@@ -47,8 +47,8 @@ class OrdersController < ApplicationController
                   :price => item[:pizza_type][:price]))
     end
     @order.save
-      render json: @order
-      # TODO add in a rescue here
+    render json: @order
+    # TODO add in a rescue here
   end
 
   # DELETE /orders/1
