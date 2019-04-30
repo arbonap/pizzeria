@@ -3,13 +3,10 @@ RSpec.describe OrdersController, type: :controller do
   let(:valid_attributes) { {:items => [Item.create(:quantity => 2, :pizza_type => PizzaType.create(:name => 'Pepperoni', :price => 9.00))]}
   }
 
-  let(:valid_session) { {:items => [Item.create(:quantity => 2, :pizza_type => PizzaType.create(:name => 'Pepperoni', :price => 9.00))]}
-  }
-
   describe "GET #index" do
     it "returns a success response" do
       Order.create! valid_attributes
-      get :index, {}, valid_session
+      get :index
       expect(response).to be_successful
     end
   end
@@ -17,7 +14,7 @@ RSpec.describe OrdersController, type: :controller do
   describe "GET #show" do
     it "returns a success response" do
       order = Order.create! valid_attributes
-      get :show, {:id => order.to_param}, valid_session
+      get :show, {:id => order.to_param}
       expect(response).to be_successful
     end
   end
@@ -51,7 +48,7 @@ RSpec.describe OrdersController, type: :controller do
     end
 
     context "with invalid params" do
-      it "should not create an order, and raise TypeError" do
+      it "should not create an order, and rescue TypeError exception" do
         post :create, invalid_params
         expect(response).to_not be_successful
       end
@@ -73,17 +70,31 @@ RSpec.describe OrdersController, type: :controller do
 
         put :update, {:id => @order.to_param, :params => new_attributes}
         @order.reload
-        # TODO: check other attributes here
+
+        expect(@order.items[0].quantity).to eq(2)
         expect(@order.items[0].pizza_type.name).to eq("Supreme")
+        expect(@order.items[0].pizza_type.price.to_i).to eq(5)
+      end
+
+      it "should not create a new Order" do
+        @order = Order.create! valid_attributes
+
+        expect {
+          put :update, {:id => @order.to_param, :params => new_attributes}
+        }.to change(Order, :count).by(0)
       end
     end
 
-    # context "with invalid params" do
-    #   it "returns a success response (i.e. to display the 'edit' template)" do
-    #     order = Order.create! valid_attributes
-    #     put :update, {:id => order.to_param, :order => invalid_attributes}, valid_session
-    #     expect(response).to be_successful
-    #   end
-    # end
+    context "with invalid params" do
+      let(:invalid_params) {
+        {order: {items: {quantity:"5"}}}
+      }
+
+      it "should not update an order and rescue a TypeError Exception" do
+        order = Order.create! valid_attributes
+        put :update, {:id => order.to_param, :order => invalid_params}
+        expect(response).to_not be_successful
+      end
+    end
   end
 end

@@ -30,25 +30,27 @@ class OrdersController < ApplicationController
 
       @order.save
       render json: @order
-    rescue TypeError, ActiveRecord::RecordInvalid
+    rescue NoMethodError, TypeError, ActiveRecord::RecordInvalid
       render json: { errors: @order.errors }, status: 422
     end
   end
 
   # PATCH/PUT /orders/1
   def update
-    # byebug
-    Item.where(order_id: @order.id).destroy_all
+    begin
+      Item.where(order_id: @order.id).destroy_all
 
-    params[:params][:order][:items].map do |item|
-      Item.create(:quantity => item[:quantity],
-                  :order => @order,
-                  :pizza_type => PizzaType.create(:name => item[:pizza_type][:name],
-                  :price => item[:pizza_type][:price]))
+      params[:params][:order][:items].map do |item|
+        Item.create(:quantity => item[:quantity],
+                    :order => @order,
+                    :pizza_type => PizzaType.create(:name => item[:pizza_type][:name],
+                    :price => item[:pizza_type][:price]))
+      end
+      @order.save
+      render json: @order
+    rescue NoMethodError, TypeError, ActiveRecord::RecordInvalid
+      render json: { errors: @order.errors }, status: 422
     end
-    @order.save
-    render json: @order
-    # TODO add in a rescue here
   end
 
   # DELETE /orders/1
