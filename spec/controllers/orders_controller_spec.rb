@@ -97,4 +97,22 @@ RSpec.describe OrdersController, type: :controller do
       end
     end
   end
+
+  describe "DELETE #destroy" do
+    context "with valid record" do
+      it "deletes an order" do
+        @order = Order.create! valid_attributes
+        delete :destroy, {:id => @order.to_param}
+        expect(response).to be_successful
+      end
+
+      it "should decrement Order count" do
+        @order = Order.create! valid_attributes
+
+        expect {
+          delete :destroy, {:id => @order.to_param}
+        }.to change(Order, :count).by(-1)
+      end
+    end
+  end
 end
