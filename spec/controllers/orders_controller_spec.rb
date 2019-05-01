@@ -1,12 +1,18 @@
 require 'rails_helper'
 RSpec.describe OrdersController, type: :controller do
+  include Devise::Test::ControllerHelpers
+
   let(:valid_attributes) { {:items => [Item.create(:quantity => 2, :pizza_type => PizzaType.create(:name => 'Pepperoni', :price => 9.00))]}
   }
+  before(:each) do
+    @user = User.create(:email => "test@example.com", :password => 'password')
+    subject.sign_in @user
+  end
 
   describe "GET #index" do
     it "returns a success response" do
       Order.create! valid_attributes
-      get :index
+      get :index, {}
       expect(response).to be_successful
     end
   end
@@ -62,13 +68,13 @@ RSpec.describe OrdersController, type: :controller do
       }
 
       let(:new_attributes) {
-        {order: {items: [{quantity:"2",pizza_type:{name: "Supreme", price: "5"}}]}}
+        {items: [{quantity:"2",pizza_type:{name: "Supreme", price: "5"}}]}
       }
 
       it "updates the requested order" do
         @order = Order.create! valid_attributes
 
-        put :update, {:id => @order.to_param, :params => new_attributes}
+        put :update, {:id => @order.to_param, :order => new_attributes}
         @order.reload
 
         expect(@order.items[0].quantity).to eq(2)
@@ -80,14 +86,14 @@ RSpec.describe OrdersController, type: :controller do
         @order = Order.create! valid_attributes
 
         expect {
-          put :update, {:id => @order.to_param, :params => new_attributes}
+          put :update, {:id => @order.to_param, :order => new_attributes}
         }.to change(Order, :count).by(0)
       end
     end
 
     context "with invalid params" do
       let(:invalid_params) {
-        {order: {items: {quantity:"5"}}}
+        {items: {quantity:"5"}}
       }
 
       it "should not update an order and rescue a TypeError Exception" do
