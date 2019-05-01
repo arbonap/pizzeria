@@ -2,10 +2,18 @@ require 'rails_helper'
 RSpec.describe OrdersController, type: :controller do
   include Devise::Test::ControllerHelpers
 
-  let(:valid_attributes) { {:items => [Item.create(:quantity => 2, :pizza_type => PizzaType.create(:name => 'Pepperoni', :price => 9.00))]}
+  let(:valid_attributes) {
+    {:items =>
+      [Item.create(:quantity => 2,
+                   :pizza_type => PizzaType.create(:name => 'Pepperoni',
+                                                   :price => 9.00))
+      ]
+    }
   }
+
   before(:each) do
-    @user = User.create(:email => "test@example.com", :password => 'password')
+    @user = User.create(:email => "test@example.com",
+                        :password => 'password')
     subject.sign_in @user
   end
 
@@ -28,15 +36,33 @@ RSpec.describe OrdersController, type: :controller do
   describe "POST #create" do
 
     let(:margherita_params) {
-      {order: {items: [{quantity:"3",pizza_type:{name: "Margherita", price: "10"}}]}}
+      {order:
+        {items:
+          [{quantity:"3",
+            pizza_type:
+              {name: "Margherita", price: "10"}
+          }]
+        }
+      }
     }
 
     let(:meat_params) {
-      {order: {items: [{quantity:"2",pizza_type:{name: "Meat Lover's", price: "12"}}]}}
+      {order:
+        {items:
+          [{quantity:"2",
+            pizza_type:
+              {name: "Meat Lover's", price: "12"}
+            }]
+        }
+      }
     }
 
     let(:invalid_params) {
-      {order: {items: {quantity:"2"}}}
+      {order:
+        {items:
+          {quantity:"2"}
+        }
+      }
     }
 
     context "with valid params" do
@@ -64,11 +90,23 @@ RSpec.describe OrdersController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:margherita_params) {
-        {order: {items: [{quantity:"3",pizza_type:{name: "Margherita", price: "10"}}]}}
+        {order:
+          {items:
+            [{quantity:"3",
+              pizza_type:
+                {name: "Margherita", price: "10"}
+              }]
+          }
+        }
       }
 
       let(:new_attributes) {
-        {items: [{quantity:"2",pizza_type:{name: "Supreme", price: "5"}}]}
+        {items:
+          [{quantity:"2",
+            pizza_type:
+              {name: "Supreme", price: "5"}
+          }]
+        }
       }
 
       it "updates the requested order" do
@@ -93,7 +131,9 @@ RSpec.describe OrdersController, type: :controller do
 
     context "with invalid params" do
       let(:invalid_params) {
-        {items: {quantity:"5"}}
+        {items:
+          {quantity:"5"}
+        }
       }
 
       it "should not update an order and rescue a TypeError Exception" do
