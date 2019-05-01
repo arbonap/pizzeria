@@ -1,6 +1,8 @@
 # [![CircleCI](https://circleci.com/gh/arbonap/pizzeria.svg?style=svg)](https://circleci.com/gh/arbonap/pizzeria) Pizzeria 🍕
 ## Deployed on Heroku: https://secret-harbor-55513.herokuapp.com/orders/
 
+![json screenshot](json.png)
+
 ## Set up Pizzeria Locally
   - This runs on Postgres! Assuming you are running on OSX, download the Postgres app [here](https://postgresapp.com/).
   - __Note__: Make sure the elephant icon is in your menubar. If do not see the Postgres elephant running in your menubar, then Postgres __isn't running__.
